@@ -36,6 +36,7 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.twoplay.eesteckujna.R
 import com.twoplay.eesteckujna.databinding.FragmentDishBinding
+import com.twoplay.eesteckujna.models.Dish
 import com.twoplay.eesteckujna.ui.BaseFragment
 import com.twoplay.eesteckujna.util.loadImage
 import com.twoplay.eesteckujna.util.toEuroPrice
@@ -60,10 +61,15 @@ class DishFragment : BaseFragment() {
     }
 
     override fun observeData() {
-        dishViewModel.observeDish().observe(viewLifecycleOwner, { dish ->
-            mBinding.dish = dish
-            mBinding.ivDishImage.loadImage(dish.image)
-            mBinding.tvDishPrice.text = dish.price.toEuroPrice()
+        dishViewModel.observeDish().observe(viewLifecycleOwner, { result ->
+            val dish = result.data
+            dish?.let {
+                with(it){
+                    mBinding.dish = this
+                    mBinding.ivDishImage.loadImage(this.image)
+                    mBinding.tvDishPrice.text = this.price.toEuroPrice()
+                }
+            }
         })
     }
 

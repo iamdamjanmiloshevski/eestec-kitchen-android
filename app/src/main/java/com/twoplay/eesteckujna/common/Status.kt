@@ -25,37 +25,16 @@
  * For more information, please refer to <https://unlicense.org>
  */
 
-package com.twoplay.eesteckujna.ui
-
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.twoplay.eesteckujna.common.Resource
-import com.twoplay.eesteckujna.models.Dish
-import com.twoplay.eesteckujna.repository.NetworkRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+package com.twoplay.eesteckujna.common
 
 /*
     Author: Damjan Miloshevski 
-    Created on 2/20/21 11:08 AM
+    Created on 2/21/21 12:20 PM
     Project: EESTECKujna
     © 2Play Tech  2021. All rights reserved
 */
-@HiltViewModel
-class DishViewModel @Inject constructor(private val repository: NetworkRepository) : ViewModel() {
-    private val dishesObserver = MutableLiveData<Resource<List<Dish>>>()
-    private val dishObserver = MutableLiveData<Resource<Dish>>()
-
-    fun getDishes() {
-        repository.getAllDishes(successCallback = { dishes ->
-            dishesObserver.value = Resource.success(null,dishes)
-        })
-    }
-    fun getDishById(dishId:String){
-           repository.getDishById(dishId,successCallback = {dish->
-               dishObserver.value = Resource.success(null,dish)
-       })
-    }
-    fun observeDishes() = dishesObserver
-    fun observeDish() = dishObserver
+enum class Status {
+    SUCCESS,
+    ERROR,
+    LOADING
 }

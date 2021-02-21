@@ -35,6 +35,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.twoplay.eesteckujna.R
 
 import com.twoplay.eesteckujna.models.Dish
@@ -74,7 +75,8 @@ class DishesFragment : BaseFragment(), OnDishItemClickedListener {
     }
 
     override fun observeData() {
-        dishViewModel.observeDishes().observe(viewLifecycleOwner, { dishes ->
+        dishViewModel.observeDishes().observe(viewLifecycleOwner, { result ->
+            val dishes = result.data as List<Dish>
             dishesAdapter.setDishes(dishes)
         })
     }
@@ -85,6 +87,12 @@ class DishesFragment : BaseFragment(), OnDishItemClickedListener {
 
     override fun initUI() {
         dishesAdapter.setOnDishClickListener(this)
+        dishesAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                mBinding.tvNoData.visibility =
+                    if (dishesAdapter.itemCount == 0) View.VISIBLE else View.GONE
+            }
+        })
         mBinding.rvDishes.apply {
             adapter = dishesAdapter
             layoutManager =
